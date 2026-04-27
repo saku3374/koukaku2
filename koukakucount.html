@@ -342,90 +342,54 @@ body{background:var(--bg);color:var(--t);font-family:'Hiragino Kaku Gothic ProN'
   </div>
 </div>
 <script>
-var CV = {};
-var holdTimers = {};
-var HOLD_MS = 400;
-var COLORS = ['白','青','緑','赤','紫','金','虹'];
-var CB = {};
-var curTbl = 1;
-var curColor = null;
+// ===== localStorage =====
+function lsSave(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+function lsLoad(key) { try { var s = localStorage.getItem(key); return s ? JSON.parse(s) : null; } catch(e) { return null; } }
 
-function saveCV() {
-try { localStorage.setItem(‘gits_cv’, JSON.stringify(CV)); } catch(e) {}
-}
-function saveCB() {
-try { localStorage.setItem(‘gits_cb’, JSON.stringify(CB)); } catch(e) {}
-}
-function loadData() {
-try {
-var cv = localStorage.getItem(‘gits_cv’);
-if (cv) CV = JSON.parse(cv);
-} catch(e) {}
-try {
-var cb = localStorage.getItem(‘gits_cb’);
-if (cb) CB = JSON.parse(cb);
-} catch(e) {}
-}
-function initCB() {
-COLORS.forEach(function(c) {
-if (!CB[c]) CB[c] = {};
-for (var t = 1; t <= 7; t++) {
-if (!CB[c][t]) CB[c][t] = {ok:0, ng:0};
-}
-});
-}
-function restoreCV() {
-document.querySelectorAll(’.tap-btn[data-id]’).forEach(function(btn) {
-var id = btn.dataset.id;
-var v = CV[id] || 0;
-var el = document.getElementById(id);
-if (el) el.textContent = v;
-if (v > 0) btn.classList.add(‘tapped’);
-});
-updateStgStats();
-}
-function sw(i) {
-document.querySelectorAll(’.pane’).forEach(function(p, j) { p.classList.toggle(‘on’, i === j); });
-document.querySelectorAll(’.tab’).forEach(function(b, j) { b.classList.toggle(‘on’, i === j); });
-}
+// ===== カウンター =====
+const CV = lsLoad(‘gits_cv’) || {};
+const holdTimers = {};
+const HOLD_MS = 400;
+
 function setupTapBtns() {
-document.querySelectorAll(’.tap-btn[data-id]’).forEach(function(btn) {
-var id = btn.dataset.id;
-var isStg = btn.dataset.stg === ‘1’;
-var touched = false;
-btn.addEventListener(‘touchstart’, function(e) {
+document.querySelectorAll(’.tap-btn[data-id]’).forEach(btn => {
+const id = btn.dataset.id;
+const isStg = btn.dataset.stg === ‘1’;
+let touched = false;
+btn.addEventListener(‘touchstart’, e => {
 if (e.target.closest(’.btn-rst’)) return;
 touched = true;
-holdTimers[id] = setTimeout(function() { holdTimers[id] = ‘fired’; decCV(id, btn, isStg); }, HOLD_MS);
+holdTimers[id] = setTimeout(() => { holdTimers[id] = ‘fired’; decCV(id, btn, isStg); }, HOLD_MS);
 }, {passive: true});
-btn.addEventListener(‘touchend’, function(e) {
+btn.addEventListener(‘touchend’, e => {
 if (e.target.closest(’.btn-rst’)) return;
 if (holdTimers[id] === ‘fired’) { holdTimers[id] = null; return; }
 clearTimeout(holdTimers[id]); holdTimers[id] = null;
 incCV(id, btn, isStg);
 });
-btn.addEventListener(‘touchcancel’, function() { clearTimeout(holdTimers[id]); holdTimers[id] = null; });
-btn.addEventListener(‘mousedown’, function(e) {
+btn.addEventListener(‘touchcancel’, () => { clearTimeout(holdTimers[id]); holdTimers[id] = null; });
+btn.addEventListener(‘mousedown’, e => {
 if (touched) { touched = false; return; }
 if (e.target.closest(’.btn-rst’)) return;
-holdTimers[id] = setTimeout(function() { holdTimers[id] = ‘fired’; decCV(id, btn, isStg); }, HOLD_MS);
+holdTimers[id] = setTimeout(() => { holdTimers[id] = ‘fired’; decCV(id, btn, isStg); }, HOLD_MS);
 });
-btn.addEventListener(‘mouseup’, function(e) {
+btn.addEventListener(‘mouseup’, e => {
 if (e.target.closest(’.btn-rst’)) return;
 if (holdTimers[id] === ‘fired’) { holdTimers[id] = null; return; }
 if (holdTimers[id] === null) return;
 clearTimeout(holdTimers[id]); holdTimers[id] = null;
 incCV(id, btn, isStg);
 });
-btn.addEventListener(‘mouseleave’, function() { clearTimeout(holdTimers[id]); holdTimers[id] = null; });
+btn.addEventListener(‘mouseleave’, () => { clearTimeout(holdTimers[id]); holdTimers[id] = null; });
 });
 }
+
 function incCV(id, btn, isStg) {
 CV[id] = (CV[id] || 0) + 1;
 document.getElementById(id).textContent = CV[id];
 btn.classList.add(‘tapped’);
 if (isStg) updateStgStats();
-saveCV();
+lsSave(‘gits_cv’, CV);
 }
 function decCV(id, btn, isStg) {
 if ((CV[id] || 0) <= 0) return;
@@ -433,99 +397,130 @@ CV[id]–;
 document.getElementById(id).textContent = CV[id];
 if (CV[id] === 0) btn.classList.remove(‘tapped’);
 btn.classList.add(‘minus-flash’);
-setTimeout(function() { btn.classList.remove(‘minus-flash’); }, 300);
+setTimeout(() => btn.classList.remove(‘minus-flash’), 300);
 if (isStg) updateStgStats();
-saveCV();
+lsSave(‘gits_cv’, CV);
 }
 function rstBtn(id, btn) {
 CV[id] = 0;
 document.getElementById(id).textContent = 0;
 btn.classList.remove(‘tapped’);
-saveCV();
+lsSave(‘gits_cv’, CV);
 }
 function rstStg(id, btn) { rstBtn(id, btn); updateStgStats(); }
+
+function restoreCV() {
+document.querySelectorAll(’.tap-btn[data-id]’).forEach(btn => {
+const id = btn.dataset.id;
+const v = CV[id] || 0;
+document.getElementById(id).textContent = v;
+if (v > 0) btn.classList.add(‘tapped’);
+});
+}
+
 function updateStgStats() {
-var n = CV[‘sn’] || 0, h = CV[‘sh’] || 0, s = CV[‘ss’] || 0, t = n + h + s;
-var fmt = function(v) { return t ? Math.round(v / t * 100) + ‘%’ : ‘—’; };
+const n = CV[‘sn’] || 0, h = CV[‘sh’] || 0, s = CV[‘ss’] || 0, t = n + h + s;
+const fmt = v => t ? Math.round(v / t * 100) + ‘%’ : ‘—’;
 document.getElementById(‘sn-r’).textContent = fmt(n);
 document.getElementById(‘sh-r’).textContent = fmt(h);
-var sp = t ? Math.round(s / t * 100) : 0;
-var el = document.getElementById(‘ss-r’);
+const sp = t ? Math.round(s / t * 100) : 0;
+const el = document.getElementById(‘ss-r’);
 el.textContent = t ? sp + ‘%’ : ‘—’;
 el.style.color = sp >= 4 ? ‘#ffd700’ : sp >= 3 ? ‘#00ff9d’ : ‘’;
 }
+
+// ===== タブ =====
+function sw(i) {
+document.querySelectorAll(’.pane’).forEach((p, j) => p.classList.toggle(‘on’, i === j));
+document.querySelectorAll(’.tab’).forEach((b, j) => b.classList.toggle(‘on’, i === j));
+}
+
+// ===== 殲滅 =====
+const COLORS = [‘白’,‘青’,‘緑’,‘赤’,‘紫’,‘金’,‘虹’];
+const _savedCB = lsLoad(‘gits_cb’);
+const CB = {};
+COLORS.forEach(c => {
+CB[c] = {};
+for (let t = 1; t <= 7; t++) {
+CB[c][t] = (_savedCB && _savedCB[c] && _savedCB[c][t]) ? _savedCB[c][t] : {ok: 0, ng: 0};
+}
+});
+let curTbl = 1, curColor = null;
+
 function selTbl(n) {
 curTbl = n;
-document.querySelectorAll(’.tbl-sel-btn’).forEach(function(b, i) { b.classList.toggle(‘on’, i === n - 1); });
+document.querySelectorAll(’.tbl-sel-btn’).forEach((b, i) => b.classList.toggle(‘on’, i === n - 1));
 updateSelDisp();
 }
 function selColor(c) {
 curColor = c;
-document.querySelectorAll(’.col-sel-btn’).forEach(function(b) { b.classList.toggle(‘on’, b.dataset.color === c); });
+document.querySelectorAll(’.col-sel-btn’).forEach(b => b.classList.toggle(‘on’, b.dataset.color === c));
 updateSelDisp();
 }
 function updateSelDisp() {
-var el = document.getElementById(‘sel-disp’);
+const el = document.getElementById(‘sel-disp’);
 if (!curColor) { el.innerHTML = ‘テーブルと色を選んでください’; el.style.color = ‘var(–t2)’; return; }
-var cm = {‘白’:’#d8eeff’,‘青’:’#00d4ff’,‘緑’:’#00ff9d’,‘赤’:’#ff3b5c’,‘紫’:’#b06bff’,‘金’:’#ffd700’,‘虹’:’#fff’};
-var nums = ‘①②③④⑤⑥⑦’;
-el.innerHTML = ‘テーブル <b style="color:var(--c);font-size:16px;">’ + nums[curTbl - 1] + ‘</b> → <b style="color:' + cm[curColor] + ';font-size:18px;">’ + curColor + ‘</b>’;
+const cm = {‘白’:’#d8eeff’,‘青’:’#00d4ff’,‘緑’:’#00ff9d’,‘赤’:’#ff3b5c’,‘紫’:’#b06bff’,‘金’:’#ffd700’,‘虹’:’#fff’};
+const nums = ‘①②③④⑤⑥⑦’;
+el.innerHTML = `テーブル <b style="color:var(--c);font-size:16px;">${nums[curTbl-1]}</b> → <b style="color:${cm[curColor]};font-size:18px;">${curColor}</b>`;
 el.style.color = ‘var(–t)’;
 }
 function recResult(ok) {
 if (!curColor) return;
 CB[curColor][curTbl][ok ? ‘ok’ : ‘ng’]++;
 updateComboStats();
-saveCB();
-var el = document.getElementById(‘sel-disp’);
+lsSave(‘gits_cb’, CB);
+const el = document.getElementById(‘sel-disp’);
 el.style.background = ok ? ‘rgba(0,255,157,.2)’ : ‘rgba(255,59,92,.2)’;
-setTimeout(function() { el.style.background = ‘’; }, 400);
+setTimeout(() => el.style.background = ‘’, 400);
 }
 function fmtCell(ok, ng) {
-var t = ok + ng;
+const t = ok + ng;
 if (!t) return ‘—’;
-return ok + ‘/’ + t + ‘<br><span style="font-size:8px;">’ + Math.round(ok / t * 100) + ‘%</span>’;
+return `${ok}/${t}<br><span style="font-size:8px;">${Math.round(ok/t*100)}%</span>`;
 }
 function updateComboStats() {
-var tTot = [0,0,0,0,0,0,0];
-var gtot = 0;
-COLORS.forEach(function(c) {
-var tok = 0, tng = 0;
-for (var t = 1; t <= 7; t++) {
-var d = CB[c][t];
-document.getElementById(‘cb’ + c + t).innerHTML = fmtCell(d.ok, d.ng);
+const tTot = [0,0,0,0,0,0,0];
+let gtot = 0;
+COLORS.forEach(c => {
+let tok = 0, tng = 0;
+for (let i = 1; i <= 7; i++) {
+const d = CB[c][i];
+document.getElementById(‘cb’ + c + i).innerHTML = fmtCell(d.ok, d.ng);
 tok += d.ok; tng += d.ng;
-tTot[t - 1] += (d.ok + d.ng);
+tTot[i-1] += (d.ok + d.ng);
 }
 document.getElementById(‘cb’ + c + ‘T’).innerHTML = fmtCell(tok, tng);
 gtot += tok + tng;
 });
-var gtok = 0, gtng = 0;
-for (var t = 1; t <= 7; t++) {
-var tok = 0, tng = 0;
-COLORS.forEach(function(c) { tok += CB[c][t].ok; tng += CB[c][t].ng; });
-document.getElementById(‘cbT’ + t).innerHTML = fmtCell(tok, tng);
-document.getElementById(‘cbR’ + t).textContent = gtot ? Math.round(tTot[t - 1] / gtot * 100) + ‘%’ : ‘—’;
+let gtok = 0, gtng = 0;
+for (let i = 1; i <= 7; i++) {
+let tok = 0, tng = 0;
+COLORS.forEach(c => { tok += CB[c][i].ok; tng += CB[c][i].ng; });
+document.getElementById(‘cbT’ + i).innerHTML = fmtCell(tok, tng);
+document.getElementById(‘cbR’ + i).textContent = gtot ? Math.round(tTot[i-1] / gtot * 100) + ‘%’ : ‘—’;
 gtok += tok; gtng += tng;
 }
 document.getElementById(‘cbTT’).innerHTML = fmtCell(gtok, gtng);
 }
 function resetSenmetsu() {
-COLORS.forEach(function(c) { for (var t = 1; t <= 7; t++) CB[c][t] = {ok:0, ng:0}; });
+COLORS.forEach(c => { for (let i = 1; i <= 7; i++) CB[c][i] = {ok:0, ng:0}; });
 updateComboStats();
-saveCB();
+lsSave(‘gits_cb’, CB);
 curColor = null;
-document.querySelectorAll(’.col-sel-btn’).forEach(function(b) { b.classList.remove(‘on’); });
+document.querySelectorAll(’.col-sel-btn’).forEach(b => b.classList.remove(‘on’));
 updateSelDisp();
 }
+
+// ===== 画像 =====
 function loadImg(input, zoneId) {
-var f = input.files[0]; if (!f) return;
-var r = new FileReader();
-r.onload = function(e) {
-var z = document.getElementById(zoneId);
+const f = input.files[0]; if (!f) return;
+const r = new FileReader();
+r.onload = e => {
+const z = document.getElementById(zoneId);
 z.querySelector(’.img-ph’).style.display = ‘none’;
-var old = z.querySelector(‘img’); if (old) old.remove();
-var img = document.createElement(‘img’); img.src = e.target.result;
+const old = z.querySelector(‘img’); if (old) old.remove();
+const img = document.createElement(‘img’); img.src = e.target.result;
 z.insertBefore(img, z.querySelector(‘input’));
 document.getElementById(zoneId + ‘-c’).classList.add(‘show’);
 z.classList.add(‘has-img’);
@@ -533,17 +528,18 @@ z.classList.add(‘has-img’);
 r.readAsDataURL(f);
 }
 function clearImg(zoneId) {
-var z = document.getElementById(zoneId);
-var img = z.querySelector(‘img’); if (img) img.remove();
+const z = document.getElementById(zoneId);
+const img = z.querySelector(‘img’); if (img) img.remove();
 z.querySelector(’.img-ph’).style.display = ‘’;
 document.getElementById(zoneId + ‘-c’).classList.remove(‘show’);
 z.classList.remove(‘has-img’);
 z.querySelector(‘input[type=file]’).value = ‘’;
 }
-loadData();
-initCB();
+
+// ===== 初期化 =====
 setupTapBtns();
 restoreCV();
+updateStgStats();
 updateComboStats();
 </script>
 
