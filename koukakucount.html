@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>攻殻機動隊 実戦シート</title>
+<style>
+:root{
+  --bg:#04090e;--bg2:#081320;--bg3:#0d1c2e;
+  --c:#00d4ff;--c2:#00ff9d;--gold:#ffd700;
+  --red:#ff3b5c;--pur:#b06bff;--org:#ff6b35;
+  --t:#d8eeff;--t2:#6aa0be;--bdr:rgba(0,212,255,.2);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;}
+body{background:var(--bg);color:var(--t);font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;font-size:12px;overflow-x:hidden;}
+.hdr{position:sticky;top:0;z-index:100;background:#04090e;border-bottom:1.5px solid var(--c);padding:6px 12px 5px;}
+.hdr-t{font-size:13px;font-weight:800;color:var(--c);letter-spacing:1px;}
+.hdr-s{font-size:8px;color:var(--t2);}
+.tabbar{display:flex;background:var(--bg2);border-bottom:1px solid var(--bdr);overflow-x:auto;scrollbar-width:none;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{flex:none;padding:9px 11px;font-size:10px;font-weight:700;color:var(--t2);background:none;border:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;}
+.tab.on{color:var(--c);border-bottom-color:var(--c);background:rgba(0,212,255,.07);}
+.pane{display:none;padding:8px;}
+.pane.on{display:block;}
+.card{background:var(--bg2);border:1px solid var(--bdr);border-radius:8px;margin-bottom:8px;overflow:hidden;}
+.card-title{background:linear-gradient(90deg,rgba(0,212,255,.12),transparent);border-bottom:1px solid var(--bdr);padding:6px 10px;font-size:10px;font-weight:800;color:var(--c);letter-spacing:1px;}
+.card-body{padding:8px;}
+.tap-grid{display:grid;gap:6px;}
+.col3{grid-template-columns:1fr 1fr 1fr;}
+.tap-btn{position:relative;border-radius:8px;border:1.5px solid rgba(0,212,255,.2);background:var(--bg3);color:var(--t);cursor:pointer;padding:8px 4px 7px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-height:62px;transition:border-color .1s,background .1s;-webkit-touch-callout:none;}
+.tap-btn:active{background:rgba(0,212,255,.16);transform:scale(.95);}
+.tap-btn.tapped{border-color:rgba(0,212,255,.5);background:rgba(0,212,255,.07);}
+.tap-btn.minus-flash{background:rgba(255,59,92,.25)!important;}
+.btn-name{font-size:11px;font-weight:700;line-height:1.2;text-align:center;}
+.btn-hint{font-size:8px;color:var(--t2);text-align:center;line-height:1.3;}
+.btn-cnt{font-size:22px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1;}
+.btn-sub{font-size:9px;font-weight:600;line-height:1;}
+.btn-rst{position:absolute;top:3px;right:3px;width:16px;height:16px;border-radius:50%;background:rgba(100,120,140,.5);border:none;color:#fff;font-size:9px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.btn-rst:active{background:rgba(255,59,92,.7);}
+.stg-btn{min-height:72px;}
+.stg-btn .btn-cnt{font-size:28px;}
+.stg-btn .btn-name{font-size:13px;}
+.tc-def{color:var(--t2);border-color:rgba(180,200,220,.18);}
+.tc-b{color:var(--c);border-color:rgba(0,212,255,.28);}
+.tc-g{color:var(--c2);border-color:rgba(0,255,157,.28);}
+.tc-y{color:var(--gold);border-color:rgba(255,215,0,.28);}
+.tc-r{color:var(--red);border-color:rgba(255,59,92,.28);}
+.tc-p{color:var(--pur);border-color:rgba(176,107,255,.28);}
+.tc-rb{background:linear-gradient(135deg,rgba(255,59,92,.07),rgba(176,107,255,.07),rgba(0,212,255,.07));border-color:rgba(255,255,255,.22);color:#fff;}
+.tbl{width:100%;border-collapse:collapse;}
+.tbl th{background:rgba(0,212,255,.1);color:var(--c);padding:4px 3px;text-align:center;border:1px solid var(--bdr);font-size:9px;}
+.tbl td{padding:4px 3px;text-align:center;border:1px solid rgba(0,212,255,.09);font-size:10px;}
+.tbl tr:nth-child(even) td{background:rgba(255,255,255,.02);}
+.note{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.22);border-radius:7px;padding:6px 9px;font-size:10px;color:var(--gold);line-height:1.6;margin-top:6px;}
+.note.bl{background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.22);color:var(--c);}
+.rst-all{width:100%;padding:9px;background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.35);border-radius:8px;color:var(--red);font-size:11px;font-weight:800;cursor:pointer;margin-top:6px;}
+.rst-all:active{background:rgba(255,59,92,.22);}
+.img-zone{position:relative;background:var(--bg3);border:2px dashed rgba(0,212,255,.25);border-radius:8px;min-height:100px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;}
+.img-zone.has-img{min-height:0;border-style:solid;}
+.img-zone img{width:100%;height:auto;display:block;}
+.img-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
+.img-ph{display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;}
+.img-ph-ico{font-size:22px;opacity:.35;}
+.img-ph-txt{font-size:10px;color:var(--t2);}
+.img-clear{position:absolute;top:5px;right:5px;z-index:3;background:rgba(255,59,92,.8);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;font-weight:700;}
+.img-clear.show{display:flex;}
+.tbl-sel-grid{display:flex;gap:5px;margin-bottom:10px;}
+.tbl-sel-btn{flex:1;height:42px;border-radius:7px;border:1.5px solid rgba(0,212,255,.25);background:var(--bg3);color:var(--t2);font-size:14px;font-weight:800;cursor:pointer;}
+.tbl-sel-btn.on{border-color:var(--c);background:rgba(0,212,255,.18);color:var(--c);}
+.tbl-sel-btn:active{transform:scale(.94);}
+.col-sel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;}
+.col-sel-btn{height:46px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15);background:var(--bg3);font-size:15px;font-weight:800;cursor:pointer;color:var(--cc,#fff);}
+.col-sel-btn.on{background:color-mix(in srgb,var(--cc,#fff) 18%,transparent);border-color:var(--cc,#fff);}
+.col-sel-btn:active{transform:scale(.93);}
+.col-rainbow{background:linear-gradient(90deg,rgba(255,59,92,.12),rgba(176,107,255,.12),rgba(0,212,255,.12),rgba(0,255,157,.12));border-color:rgba(255,255,255,.22);color:#fff;grid-column:span 2;}
+.col-rainbow.on{border-color:#fff;}
+.sel-disp{padding:10px;border-radius:8px;background:var(--bg3);border:1px solid var(--bdr);text-align:center;font-size:12px;color:var(--t2);margin-bottom:10px;min-height:44px;display:flex;align-items:center;justify-content:center;transition:background .3s;}
+.res-btns{display:flex;gap:8px;}
+.res-btn{flex:1;padding:14px;border-radius:9px;font-size:16px;font-weight:800;cursor:pointer;border:1.5px solid;}
+.res-ok{background:rgba(0,255,157,.1);border-color:rgba(0,255,157,.5);color:#00ff9d;}
+.res-ng{background:rgba(255,59,92,.1);border-color:rgba(255,59,92,.5);color:#ff3b5c;}
+.res-btn:active{transform:scale(.95);}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hdr-t">⚙ 攻殻機動隊 SAC</div>
+  <div class="hdr-s">SMART PACHISLOT</div>
+</div>
+<div class="tabbar">
+  <button class="tab on" onclick="sw(0)">🔵 S.A.M./ステージ</button>
+  <button class="tab" onclick="sw(1)">🔴 AT/PUSH</button>
+  <button class="tab" onclick="sw(2)">⚔ 殲滅</button>
+  <button class="tab" onclick="sw(3)">💡 示唆</button>
+  <button class="tab" onclick="sw(4)">📋 スペック</button>
+</div>
+<div class="pane on" id="p0">
+  <div class="card">
+    <div class="card-title">📸 画面メモ</div>
+    <div class="card-body" style="padding:6px;">
+      <div class="img-zone" id="iz0">
+        <div class="img-ph"><div class="img-ph-ico">📷</div><div class="img-ph-txt">タップして貼り込む</div></div>
+        <input type="file" accept="image/*" onchange="loadImg(this,'iz0')">
+        <button class="img-clear" id="iz0-c" onclick="clearImg('iz0')">×</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">S.A.M.終了画面　<span style="font-size:9px;color:var(--t2);font-weight:400;">タップ+1 / 長押し−1</span></div>
+    <div class="card-body">
+      <div class="tap-grid col3">
+        <button class="tap-btn tc-def" data-id="s0"><div class="btn-name">①タイトル</div><div class="btn-hint">デフォルト</div><div class="btn-cnt" id="s0">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s0',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-def" data-id="s1"><div class="btn-name">②笑い男</div><div class="btn-hint">復活50%</div><div class="btn-cnt" id="s1">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s1',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn" data-id="s2"><div class="btn-name">③女性3人</div><div class="btn-hint">奇数UP</div><div class="btn-cnt" id="s2">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s2',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn" data-id="s3"><div class="btn-name">④タチコマ群</div><div class="btn-hint">偶数UP</div><div class="btn-cnt" id="s3">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s3',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-b" data-id="s4"><div class="btn-name">⑤食堂</div><div class="btn-hint">高設定(弱)</div><div class="btn-cnt" id="s4">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s4',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-b" data-id="s5"><div class="btn-name">⑥老人たち</div><div class="btn-hint">高設定(強)</div><div class="btn-cnt" id="s5">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s5',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-g" data-id="s6"><div class="btn-name">⑦素子</div><div class="btn-hint">2/3否定+高</div><div class="btn-cnt" id="s6">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s6',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-b" data-id="s7"><div class="btn-name">⑧公安9課</div><div class="btn-hint">設定2以上</div><div class="btn-cnt" id="s7">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s7',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-y" data-id="s8"><div class="btn-name">⑨バカンス</div><div class="btn-hint">設定4以上!</div><div class="btn-cnt" id="s8">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s8',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-r" data-id="s9" style="grid-column:span 3;"><div class="btn-name">⑩全員集合</div><div class="btn-hint">設定6濃厚!!</div><div class="btn-cnt" id="s9">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('s9',this.closest('.tap-btn'))">×</button></button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">AT後 開始ステージ　<span style="font-size:9px;color:var(--t2);font-weight:400;">タップ+1 / 長押し−1</span></div>
+    <div class="card-body">
+      <div class="tap-grid col3">
+        <button class="tap-btn stg-btn tc-def" data-id="sn" data-stg="1"><div class="btn-name">通常</div><div class="btn-cnt" id="sn">0</div><div class="btn-sub" id="sn-r">—</div><button class="btn-rst" onclick="event.stopPropagation();rstStg('sn',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn stg-btn tc-g" data-id="sh" data-stg="1"><div class="btn-name">高確</div><div class="btn-cnt" id="sh">0</div><div class="btn-sub" id="sh-r">—</div><button class="btn-rst" onclick="event.stopPropagation();rstStg('sh',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn stg-btn tc-y" data-id="ss" data-stg="1"><div class="btn-name">超高確</div><div class="btn-cnt" id="ss">0</div><div class="btn-sub" id="ss-r">—</div><button class="btn-rst" onclick="event.stopPropagation();rstStg('ss',this.closest('.tap-btn'))">×</button></button>
+      </div>
+      <div class="note" style="margin-top:6px;font-size:9px;">超高確が多いほど高設定　設定5=4.2% / 6=4.6%<br>「バー」=高確示唆　「夜」=超高確示唆</div>
+    </div>
+  </div>
+</div>
+<div class="pane" id="p1">
+  <div class="card">
+    <div class="card-title">📸 画面メモ</div>
+    <div class="card-body" style="padding:6px;">
+      <div class="img-zone" id="iz1">
+        <div class="img-ph"><div class="img-ph-ico">📷</div><div class="img-ph-txt">タップして貼り込む</div></div>
+        <input type="file" accept="image/*" onchange="loadImg(this,'iz1')">
+        <button class="img-clear" id="iz1-c" onclick="clearImg('iz1')">×</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">AT終了 / 隠しPUSH　<span style="font-size:9px;color:var(--t2);font-weight:400;">タップ+1 / 長押し−1</span></div>
+    <div class="card-body">
+      <div class="tap-grid col3">
+        <button class="tap-btn tc-def" data-id="a0"><div class="btn-name">素子</div><div class="btn-hint">デフォルト</div><div class="btn-cnt" id="a0">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a0',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-r" data-id="a1"><div class="btn-name">2ndGIG</div><div class="btn-hint">白境界権利</div><div class="btn-cnt" id="a1">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a1',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn" data-id="a2"><div class="btn-name">トグサ</div><div class="btn-hint">奇数UP</div><div class="btn-cnt" id="a2">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a2',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn" data-id="a3"><div class="btn-name">バトー</div><div class="btn-hint">偶数UP</div><div class="btn-cnt" id="a3">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a3',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-b" data-id="a4"><div class="btn-name">素子&タチコマ</div><div class="btn-hint">高設定(弱)</div><div class="btn-cnt" id="a4">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a4',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-b" data-id="a5"><div class="btn-name">ポーカー</div><div class="btn-hint">高モードUP</div><div class="btn-cnt" id="a5">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a5',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-b" data-id="a6"><div class="btn-name">後姿素子</div><div class="btn-hint">通常B以上</div><div class="btn-cnt" id="a6">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a6',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-g" data-id="a7"><div class="btn-name">公安9課(赤)</div><div class="btn-hint">通常C以上!</div><div class="btn-cnt" id="a7">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a7',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-p" data-id="a8"><div class="btn-name">電脳素子(紫)</div><div class="btn-hint">C以上(D期待)</div><div class="btn-cnt" id="a8">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a8',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-y" data-id="a9" style="grid-column:span 3;"><div class="btn-name">アオイ（金枠）</div><div class="btn-hint">通常D確定 + 設定4以上!!</div><div class="btn-cnt" id="a9">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('a9',this.closest('.tap-btn'))">×</button></button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚡ サミートロフィー</div>
+    <div class="card-body">
+      <div class="tap-grid col3">
+        <button class="tap-btn tc-b" data-id="t0"><div class="btn-name">銅</div><div class="btn-hint">設定2以上</div><div class="btn-cnt" id="t0">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('t0',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-def" data-id="t1"><div class="btn-name">銀</div><div class="btn-hint">設定3以上</div><div class="btn-cnt" id="t1">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('t1',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-y" data-id="t2"><div class="btn-name">金</div><div class="btn-hint">設定4以上!</div><div class="btn-cnt" id="t2">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('t2',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-y" data-id="t3"><div class="btn-name">キリン</div><div class="btn-hint">設定5以上!</div><div class="btn-cnt" id="t3">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('t3',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-r" data-id="t4" style="grid-column:span 2;"><div class="btn-name">🌈 虹</div><div class="btn-hint">設定6確定!!</div><div class="btn-cnt" id="t4">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('t4',this.closest('.tap-btn'))">×</button></button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💫 エンディングランプ　<span style="font-size:9px;color:var(--t2);font-weight:400;">タップ+1 / 長押し−1</span></div>
+    <div class="card-body">
+      <div class="tap-grid col3">
+        <button class="tap-btn tc-b" data-id="lp0"><div class="btn-name">青</div><div class="btn-hint">奇数示唆</div><div class="btn-cnt" id="lp0">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('lp0',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-y" data-id="lp1" style="border-color:rgba(255,220,50,.3);color:#ffe050;"><div class="btn-name">黄</div><div class="btn-hint">偶数示唆</div><div class="btn-cnt" id="lp1">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('lp1',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-p" data-id="lp2"><div class="btn-name">紫</div><div class="btn-hint">設定2以上</div><div class="btn-cnt" id="lp2">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('lp2',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-g" data-id="lp3"><div class="btn-name">緑</div><div class="btn-hint">奇数&高設定</div><div class="btn-cnt" id="lp3">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('lp3',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-r" data-id="lp4"><div class="btn-name">赤</div><div class="btn-hint">偶数&高設定</div><div class="btn-cnt" id="lp4">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('lp4',this.closest('.tap-btn'))">×</button></button>
+        <button class="tap-btn tc-rb" data-id="lp5"><div class="btn-name">🌈虹</div><div class="btn-hint">設定6確定!!</div><div class="btn-cnt" id="lp5">0</div><button class="btn-rst" onclick="event.stopPropagation();rstBtn('lp5',this.closest('.tap-btn'))">×</button></button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="pane" id="p2">
+  <div class="card">
+    <div class="card-title">📋 マスのテーブル一覧</div>
+    <div class="card-body" style="padding:4px;overflow-x:auto;">
+      <table class="tbl" style="min-width:280px;font-size:10px;">
+        <tr><th style="font-size:9px;">撃破数</th><th style="color:#e8c96b;">①</th><th style="color:#e8c96b;">②</th><th style="color:#e8c96b;">③</th><th style="color:#e8c96b;">④</th><th style="color:#e8c96b;">⑤</th><th style="color:#e8c96b;">⑥</th><th style="color:#e8c96b;">⑦</th></tr>
+        <tr><td style="font-size:9px;text-align:left;padding-left:3px;">100〜</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td><td style="background:linear-gradient(135deg,rgba(255,59,92,.25),rgba(0,212,255,.25),rgba(0,255,157,.25));color:#fff;font-weight:700;">虹</td><td style="background:linear-gradient(135deg,rgba(255,59,92,.25),rgba(0,212,255,.25),rgba(0,255,157,.25));color:#fff;font-weight:700;">虹</td><td style="background:linear-gradient(135deg,rgba(255,59,92,.25),rgba(0,212,255,.25),rgba(0,255,157,.25));color:#fff;font-weight:700;">虹</td><td style="background:linear-gradient(135deg,rgba(255,59,92,.25),rgba(0,212,255,.25),rgba(0,255,157,.25));color:#fff;font-weight:700;">虹</td></tr>
+        <tr><td style="font-size:9px;text-align:left;padding-left:3px;">80〜99</td><td style="color:#b06bff;font-weight:700;">紫</td><td style="color:#b06bff;font-weight:700;">紫</td><td style="color:#b06bff;font-weight:700;">紫</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td></tr>
+        <tr><td style="font-size:9px;text-align:left;padding-left:3px;">60〜79</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#b06bff;font-weight:700;">紫</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td></tr>
+        <tr><td style="font-size:9px;text-align:left;padding-left:3px;">40〜59</td><td style="color:#00ff9d;font-weight:700;">緑</td><td style="color:#00ff9d;font-weight:700;">緑</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#b06bff;font-weight:700;">紫</td><td style="color:#ffd700;font-weight:700;">金</td><td style="color:#ffd700;font-weight:700;">金</td></tr>
+        <tr><td style="font-size:9px;text-align:left;padding-left:3px;">20〜39</td><td style="color:#00d4ff;font-weight:700;">青</td><td style="color:#00ff9d;font-weight:700;">緑</td><td style="color:#00ff9d;font-weight:700;">緑</td><td style="color:#00ff9d;font-weight:700;">緑</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#b06bff;font-weight:700;">紫</td><td style="color:#ffd700;font-weight:700;">金</td></tr>
+        <tr><td style="font-size:9px;text-align:left;padding-left:3px;">0〜19</td><td style="color:#d8eeff;">白</td><td style="color:#00d4ff;font-weight:700;">青</td><td style="color:#00d4ff;font-weight:700;">青</td><td style="color:#00d4ff;font-weight:700;">青</td><td style="color:#00ff9d;font-weight:700;">緑</td><td style="color:#ff3b5c;font-weight:700;">赤</td><td style="color:#b06bff;font-weight:700;">紫</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">⚔ 発展記録</div>
+    <div class="card-body">
+      <div style="font-size:10px;color:var(--t2);margin-bottom:5px;">① テーブル選択</div>
+      <div class="tbl-sel-grid">
+        <button class="tbl-sel-btn on" onclick="selTbl(1)">①</button>
+        <button class="tbl-sel-btn" onclick="selTbl(2)">②</button>
+        <button class="tbl-sel-btn" onclick="selTbl(3)">③</button>
+        <button class="tbl-sel-btn" onclick="selTbl(4)">④</button>
+        <button class="tbl-sel-btn" onclick="selTbl(5)">⑤</button>
+        <button class="tbl-sel-btn" onclick="selTbl(6)">⑥</button>
+        <button class="tbl-sel-btn" onclick="selTbl(7)">⑦</button>
+      </div>
+      <div style="font-size:10px;color:var(--t2);margin-bottom:5px;">② 発展カラー選択</div>
+      <div class="col-sel-grid">
+        <button class="col-sel-btn" data-color="白" onclick="selColor('白')" style="--cc:#d8eeff;">白</button>
+        <button class="col-sel-btn" data-color="青" onclick="selColor('青')" style="--cc:#00d4ff;">青</button>
+        <button class="col-sel-btn" data-color="緑" onclick="selColor('緑')" style="--cc:#00ff9d;">緑</button>
+        <button class="col-sel-btn" data-color="赤" onclick="selColor('赤')" style="--cc:#ff3b5c;">赤</button>
+        <button class="col-sel-btn" data-color="紫" onclick="selColor('紫')" style="--cc:#b06bff;">紫</button>
+        <button class="col-sel-btn" data-color="金" onclick="selColor('金')" style="--cc:#ffd700;">金</button>
+        <button class="col-sel-btn col-rainbow" data-color="虹" onclick="selColor('虹')">🌈 虹</button>
+      </div>
+      <div id="sel-disp" class="sel-disp">テーブルと色を選んでください</div>
+      <div class="res-btns">
+        <button class="res-btn res-ok" onclick="recResult(true)">✅ 成功</button>
+        <button class="res-btn res-ng" onclick="recResult(false)">❌ 失敗</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 テーブル × 色　成否集計</div>
+    <div class="card-body" style="padding:4px;overflow-x:auto;">
+      <table class="tbl" style="min-width:310px;font-size:9px;">
+        <tr><th style="font-size:8px;">色＼T</th><th style="color:#e8c96b;">①</th><th style="color:#e8c96b;">②</th><th style="color:#e8c96b;">③</th><th style="color:#e8c96b;">④</th><th style="color:#e8c96b;">⑤</th><th style="color:#e8c96b;">⑥</th><th style="color:#e8c96b;">⑦</th><th style="font-size:8px;">計</th></tr>
+        <tr><td style="color:#d8eeff;font-weight:700;">白</td><td id="cb白1">—</td><td id="cb白2">—</td><td id="cb白3">—</td><td id="cb白4">—</td><td id="cb白5">—</td><td id="cb白6">—</td><td id="cb白7">—</td><td id="cb白T">—</td></tr>
+        <tr><td style="color:#00d4ff;font-weight:700;">青</td><td id="cb青1">—</td><td id="cb青2">—</td><td id="cb青3">—</td><td id="cb青4">—</td><td id="cb青5">—</td><td id="cb青6">—</td><td id="cb青7">—</td><td id="cb青T">—</td></tr>
+        <tr><td style="color:#00ff9d;font-weight:700;">緑</td><td id="cb緑1">—</td><td id="cb緑2">—</td><td id="cb緑3">—</td><td id="cb緑4">—</td><td id="cb緑5">—</td><td id="cb緑6">—</td><td id="cb緑7">—</td><td id="cb緑T">—</td></tr>
+        <tr><td style="color:#ff3b5c;font-weight:700;">赤</td><td id="cb赤1">—</td><td id="cb赤2">—</td><td id="cb赤3">—</td><td id="cb赤4">—</td><td id="cb赤5">—</td><td id="cb赤6">—</td><td id="cb赤7">—</td><td id="cb赤T">—</td></tr>
+        <tr><td style="color:#b06bff;font-weight:700;">紫</td><td id="cb紫1">—</td><td id="cb紫2">—</td><td id="cb紫3">—</td><td id="cb紫4">—</td><td id="cb紫5">—</td><td id="cb紫6">—</td><td id="cb紫7">—</td><td id="cb紫T">—</td></tr>
+        <tr><td style="color:#ffd700;font-weight:700;">金</td><td id="cb金1">—</td><td id="cb金2">—</td><td id="cb金3">—</td><td id="cb金4">—</td><td id="cb金5">—</td><td id="cb金6">—</td><td id="cb金7">—</td><td id="cb金T">—</td></tr>
+        <tr><td style="background:linear-gradient(90deg,rgba(255,59,92,.2),rgba(176,107,255,.2),rgba(0,212,255,.2));color:#fff;font-weight:700;">虹</td><td id="cb虹1">—</td><td id="cb虹2">—</td><td id="cb虹3">—</td><td id="cb虹4">—</td><td id="cb虹5">—</td><td id="cb虹6">—</td><td id="cb虹7">—</td><td id="cb虹T">—</td></tr>
+        <tr><td style="font-weight:700;font-size:8px;">成否計</td><td id="cbT1">—</td><td id="cbT2">—</td><td id="cbT3">—</td><td id="cbT4">—</td><td id="cbT5">—</td><td id="cbT6">—</td><td id="cbT7">—</td><td id="cbTT" style="font-weight:800;">—</td></tr>
+        <tr style="background:rgba(0,212,255,.04);"><td style="font-size:8px;color:var(--c);font-weight:700;">選択率</td><td id="cbR1" style="color:var(--c);font-weight:700;">—</td><td id="cbR2" style="color:var(--c);font-weight:700;">—</td><td id="cbR3" style="color:var(--c);font-weight:700;">—</td><td id="cbR4" style="color:var(--c);font-weight:700;">—</td><td id="cbR5" style="color:var(--c);font-weight:700;">—</td><td id="cbR6" style="color:var(--c);font-weight:700;">—</td><td id="cbR7" style="color:var(--c);font-weight:700;">—</td><td style="font-size:8px;color:var(--t2);">100%</td></tr>
+      </table>
+      <div style="font-size:9px;color:var(--t2);margin-top:4px;">各セル：成功/合計（成功率%）</div>
+      <button class="rst-all" onclick="resetSenmetsu()">⚠ 殲滅データリセット</button>
+    </div>
+  </div>
+</div>
+<div class="pane" id="p3">
+  <div class="card">
+    <div class="card-title">📸 示唆画面メモ</div>
+    <div class="card-body" style="padding:6px;">
+      <div class="img-zone" id="iz2">
+        <div class="img-ph"><div class="img-ph-ico">📷</div><div class="img-ph-txt">タップして貼り込む</div></div>
+        <input type="file" accept="image/*" onchange="loadImg(this,'iz2')">
+        <button class="img-clear" id="iz2-c" onclick="clearImg('iz2')">×</button>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <div class="note bl" style="margin-top:0;">「暴走の証明」↔「恵まれし者たち」が交互が基本<br><b>同じエピソード2連続 → 設定2以上濃厚！</b></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">💡 リプレイフラッシュ（終了後50G以内）</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>方向</th><th>示唆</th></tr>
+        <tr><td>左→右</td><td style="color:var(--c);font-weight:700;">モードB以上示唆</td></tr>
+        <tr><td>右←左(戻る)</td><td style="color:var(--pur);font-weight:700;">モードC以上確定!</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📊 モード別CZ早見表</div>
+    <div class="card-body" style="padding:4px;overflow-x:auto;">
+      <table class="tbl" style="font-size:10px;">
+        <tr><th>ゲーム数</th><th style="color:#ff3b5c;">モードA</th><th style="color:#00d4ff;">モードB</th><th style="color:#00ff9d;">モードC</th><th style="color:#ffd700;">モードD</th></tr>
+        <tr><td style="font-weight:700;">50G</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">25.0%</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">25.0%</td><td style="background:rgba(220,50,50,.35);color:#fff;font-weight:700;">100%</td></tr>
+        <tr><td style="font-weight:700;">100G</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(80,80,80,.25);color:#aaa;">1.3%</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(80,80,80,.25);color:#aaa;">1.3%</td></tr>
+        <tr><td style="font-weight:700;">150G</td><td style="background:rgba(80,80,80,.25);color:#aaa;">1.3%</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(80,80,80,.25);color:#aaa;">1.3%</td><td style="background:rgba(220,50,50,.35);color:#fff;font-weight:700;">CZ天井</td></tr>
+        <tr><td style="font-weight:700;">200G</td><td colspan="3" style="color:var(--t2);font-size:9px;text-align:center;">タチコマの家出に期待</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">250G</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">25.0%</td><td style="background:rgba(220,50,50,.35);color:#fff;font-weight:700;">CZ天井</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">300G</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(80,80,80,.25);color:#aaa;">1.3%</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">350G</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">25.0%</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">400G</td><td colspan="2" style="color:var(--t2);font-size:9px;text-align:center;">タチコマの家出に期待</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">450G</td><td style="background:rgba(0,180,80,.22);color:#fff;font-weight:700;">50.0%</td><td style="background:rgba(220,50,50,.35);color:#fff;font-weight:700;">CZ天井</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">500G</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+        <tr><td style="font-weight:700;">550G</td><td style="background:rgba(220,50,50,.35);color:#fff;font-weight:700;">CZ天井</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td><td style="background:rgba(40,40,60,.6);color:#555;">—</td></tr>
+      </table>
+      <div style="font-size:9px;color:var(--t2);margin-top:5px;line-height:1.6;">50G・250G・350G・450Gのゾーンは最低でも約25%で殲滅ゾーンへ突入<br>200G・400GはCZ「タチコマの家出」突入に期待</div>
+    </div>
+  </div>
+</div>
+<div class="pane" id="p4">
+  <div class="card">
+    <div class="card-title">📋 基本スペック</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>設定</th><th>出玉率</th><th>CZ確率</th><th>AT確率</th></tr>
+        <tr><td>1</td><td>97.9%</td><td>1/238.0</td><td>1/336.3</td></tr>
+        <tr><td>2</td><td>98.7%</td><td>1/236.3</td><td>1/332.0</td></tr>
+        <tr><td>3</td><td>100.8%</td><td>1/231.7</td><td>1/319.6</td></tr>
+        <tr><td>4</td><td>104.9%</td><td>1/220.9</td><td>1/298.7</td></tr>
+        <tr><td style="color:#00ff9d;font-weight:700;">5</td><td style="color:#00ff9d;">109.3%</td><td style="color:#00ff9d;">1/214.0</td><td style="color:#00ff9d;">1/285.8</td></tr>
+        <tr><td style="color:#ff3b5c;font-weight:700;">6</td><td style="color:#ff3b5c;">112.2%</td><td style="color:#ff3b5c;">1/210.1</td><td style="color:#ff3b5c;">1/278.0</td></tr>
+      </table>
+      <div style="font-size:9px;color:var(--t2);margin-top:4px;">純増4.0枚/G（上位AT:8.5枚/G）コイン単価3.3円</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 天井・狙い目</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>天井</th><th>通常</th><th>リセット後</th></tr>
+        <tr><td>CZ間</td><td>550G+α</td><td style="color:#ffd700;font-weight:700;">350G+α</td></tr>
+        <tr><td>AT間</td><td>999G</td><td style="color:#ffd700;font-weight:700;">699G</td></tr>
+      </table>
+      <div class="note" style="font-size:9px;">狙い目：リセット後AT間100G〜 / AT後CZ間290G〜<br>ヤメ：CZ終了後 or AT終了後<br>白境界失敗後：200G or 400GでタチコマCZ確定</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">📋 殲滅モード</div>
+    <div class="card-body">
+      <table class="tbl">
+        <tr><th>モード</th><th>CZ天井</th><th></th></tr>
+        <tr><td style="color:#ff3b5c;">A</td><td style="color:#ff3b5c;">550G</td><td style="font-size:9px;">最長</td></tr>
+        <tr><td style="color:#00d4ff;">B</td><td style="color:#00d4ff;">450G</td><td style="font-size:9px;">ロング前兆あり</td></tr>
+        <tr><td style="color:#00ff9d;">C</td><td style="color:#00ff9d;">250G</td><td></td></tr>
+        <tr><td style="color:#ffd700;font-weight:700;">D</td><td style="color:#ffd700;font-weight:700;">150G</td><td style="font-size:9px;color:#ffd700;">最短！深追い推奨</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<script>
+function sw(i){
+  document.querySelectorAll('.pane').forEach((p,j)=>p.classList.toggle('on',i===j));
+  document.querySelectorAll('.tab').forEach((b,j)=>b.classList.toggle('on',i===j));
+}
+const CV={};
+const holdTimers={};
+const HOLD_MS=400;
+function setupTapBtns(){
+  document.querySelectorAll('.tap-btn[data-id]').forEach(btn=>{
+    const id=btn.dataset.id;
+    const isStg=btn.dataset.stg==='1';
+    let touched=false;
+    btn.addEventListener('touchstart',e=>{
+      if(e.target.closest('.btn-rst'))return;
+      touched=true;
+      holdTimers[id]=setTimeout(()=>{holdTimers[id]='fired';decCV(id,btn,isStg);},HOLD_MS);
+    },{passive:true});
+    btn.addEventListener('touchend',e=>{
+      if(e.target.closest('.btn-rst'))return;
+      if(holdTimers[id]==='fired'){holdTimers[id]=null;return;}
+      clearTimeout(holdTimers[id]);holdTimers[id]=null;
+      incCV(id,btn,isStg);
+    });
+    btn.addEventListener('touchcancel',()=>{clearTimeout(holdTimers[id]);holdTimers[id]=null;});
+    btn.addEventListener('mousedown',e=>{
+      if(touched){touched=false;return;}
+      if(e.target.closest('.btn-rst'))return;
+      holdTimers[id]=setTimeout(()=>{holdTimers[id]='fired';decCV(id,btn,isStg);},HOLD_MS);
+    });
+    btn.addEventListener('mouseup',e=>{
+      if(e.target.closest('.btn-rst'))return;
+      if(holdTimers[id]==='fired'){holdTimers[id]=null;return;}
+      if(holdTimers[id]===null)return;
+      clearTimeout(holdTimers[id]);holdTimers[id]=null;
+      incCV(id,btn,isStg);
+    });
+    btn.addEventListener('mouseleave',()=>{clearTimeout(holdTimers[id]);holdTimers[id]=null;});
+  });
+}
+function incCV(id,btn,isStg){
+  CV[id]=(CV[id]||0)+1;
+  document.getElementById(id).textContent=CV[id];
+  btn.classList.add('tapped');
+  if(isStg)updateStgStats();
+}
+function decCV(id,btn,isStg){
+  if((CV[id]||0)<=0)return;
+  CV[id]--;
+  document.getElementById(id).textContent=CV[id];
+  if(CV[id]===0)btn.classList.remove('tapped');
+  btn.classList.add('minus-flash');
+  setTimeout(()=>btn.classList.remove('minus-flash'),300);
+  if(isStg)updateStgStats();
+}
+function rstBtn(id,btn){
+  CV[id]=0;
+  document.getElementById(id).textContent=0;
+  btn.classList.remove('tapped');
+}
+function rstStg(id,btn){rstBtn(id,btn);updateStgStats();}
+function updateStgStats(){
+  const n=CV['sn']||0,h=CV['sh']||0,s=CV['ss']||0,t=n+h+s;
+  const fmt=v=>t?Math.round(v/t*100)+'%':'—';
+  document.getElementById('sn-r').textContent=fmt(n);
+  document.getElementById('sh-r').textContent=fmt(h);
+  const sp=t?Math.round(s/t*100):0;
+  const el=document.getElementById('ss-r');
+  el.textContent=t?sp+'%':'—';
+  el.style.color=sp>=4?'#ffd700':sp>=3?'#00ff9d':'';
+}
+const COLORS=['白','青','緑','赤','紫','金','虹'];
+const CB={};
+COLORS.forEach(c=>{CB[c]={};for(let t=1;t<=7;t++)CB[c][t]={ok:0,ng:0};});
+let curTbl=1,curColor=null;
+function selTbl(n){
+  curTbl=n;
+  document.querySelectorAll('.tbl-sel-btn').forEach((b,i)=>b.classList.toggle('on',i===n-1));
+  updateSelDisp();
+}
+function selColor(c){
+  curColor=c;
+  document.querySelectorAll('.col-sel-btn').forEach(b=>b.classList.toggle('on',b.dataset.color===c));
+  updateSelDisp();
+}
+function updateSelDisp(){
+  const el=document.getElementById('sel-disp');
+  if(!curColor){el.innerHTML='テーブルと色を選んでください';el.style.color='var(--t2)';return;}
+  const cm={'白':'#d8eeff','青':'#00d4ff','緑':'#00ff9d','赤':'#ff3b5c','紫':'#b06bff','金':'#ffd700','虹':'#fff'};
+  const nums='①②③④⑤⑥⑦';
+  el.innerHTML=`テーブル <b style="color:var(--c);font-size:16px;">${nums[curTbl-1]}</b> → <b style="color:${cm[curColor]};font-size:18px;">${curColor}</b>`;
+  el.style.color='var(--t)';
+}
+function recResult(ok){
+  if(!curColor)return;
+  CB[curColor][curTbl][ok?'ok':'ng']++;
+  updateComboStats();
+  const el=document.getElementById('sel-disp');
+  el.style.background=ok?'rgba(0,255,157,.2)':'rgba(255,59,92,.2)';
+  setTimeout(()=>el.style.background='',400);
+}
+function fmtCell(ok,ng){
+  const t=ok+ng;
+  if(!t)return'—';
+  return`${ok}/${t}<br><span style="font-size:8px;">${Math.round(ok/t*100)}%</span>`;
+}
+function updateComboStats(){
+  const tTot=[0,0,0,0,0,0,0];
+  let gtot=0;
+  COLORS.forEach(c=>{
+    let tok=0,tng=0;
+    for(let t=1;t<=7;t++){
+      const d=CB[c][t];
+      document.getElementById('cb'+c+t).innerHTML=fmtCell(d.ok,d.ng);
+      tok+=d.ok;tng+=d.ng;
+      tTot[t-1]+=(d.ok+d.ng);
+    }
+    document.getElementById('cb'+c+'T').innerHTML=fmtCell(tok,tng);
+    gtot+=tok+tng;
+  });
+  let gtok=0,gtng=0;
+  for(let t=1;t<=7;t++){
+    let tok=0,tng=0;
+    COLORS.forEach(c=>{tok+=CB[c][t].ok;tng+=CB[c][t].ng;});
+    document.getElementById('cbT'+t).innerHTML=fmtCell(tok,tng);
+    document.getElementById('cbR'+t).textContent=gtot?Math.round(tTot[t-1]/gtot*100)+'%':'—';
+    gtok+=tok;gtng+=tng;
+  }
+  document.getElementById('cbTT').innerHTML=fmtCell(gtok,gtng);
+}
+function resetSenmetsu(){
+  COLORS.forEach(c=>{for(let t=1;t<=7;t++)CB[c][t]={ok:0,ng:0};});
+  updateComboStats();
+  curColor=null;
+  document.querySelectorAll('.col-sel-btn').forEach(b=>b.classList.remove('on'));
+  updateSelDisp();
+}
+function loadImg(input,zoneId){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const z=document.getElementById(zoneId);
+    z.querySelector('.img-ph').style.display='none';
+    const old=z.querySelector('img');if(old)old.remove();
+    const img=document.createElement('img');img.src=e.target.result;
+    z.insertBefore(img,z.querySelector('input'));
+    document.getElementById(zoneId+'-c').classList.add('show');
+    z.classList.add('has-img');
+  };
+  r.readAsDataURL(f);
+}
+function clearImg(zoneId){
+  const z=document.getElementById(zoneId);
+  const img=z.querySelector('img');if(img)img.remove();
+  z.querySelector('.img-ph').style.display='';
+  document.getElementById(zoneId+'-c').classList.remove('show');
+  z.classList.remove('has-img');
+  z.querySelector('input[type=file]').value='';
+}
+setupTapBtns();
+updateComboStats();
+</script>
+</body>
+</html>
