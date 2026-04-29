@@ -33,35 +33,34 @@ body{background:var(--bg);color:var(--t);font-family:'Hiragino Kaku Gothic ProN'
 .stg .bc{font-size:28px;}
 .stg .bn{font-size:13px;}
 .stg{min-height:72px;}
-
 .tbl{width:100%;border-collapse:collapse;}
-.tbl th{background:rgba(0,212,255,.1);color:var(–c);padding:4px 3px;text-align:center;border:1px solid var(–bd);font-size:9px;}
+.tbl th{background:rgba(0,212,255,.1);color:var(--c);padding:4px 3px;text-align:center;border:1px solid var(--bd);font-size:9px;}
 .tbl td{padding:4px 3px;text-align:center;border:1px solid rgba(0,212,255,.09);font-size:10px;}
 .tbl tr:nth-child(even) td{background:rgba(255,255,255,.02);}
-.nt{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.22);border-radius:7px;padding:6px 9px;font-size:10px;color:var(–y);line-height:1.6;margin-top:6px;}
-.nt.bl{background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.22);color:var(–c);}
-.ra{width:100%;padding:9px;background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.35);border-radius:8px;color:var(–r);font-size:11px;font-weight:800;cursor:pointer;margin-top:6px;}
+.nt{background:rgba(255,215,0,.06);border:1px solid rgba(255,215,0,.22);border-radius:7px;padding:6px 9px;font-size:10px;color:var(--y);line-height:1.6;margin-top:6px;}
+.nt.bl{background:rgba(0,212,255,.06);border-color:rgba(0,212,255,.22);color:var(--c);}
+.ra{width:100%;padding:9px;background:rgba(255,59,92,.08);border:1px solid rgba(255,59,92,.35);border-radius:8px;color:var(--r);font-size:11px;font-weight:800;cursor:pointer;margin-top:6px;}
 .sg{display:flex;gap:5px;margin-bottom:10px;}
-.sb{flex:1;height:42px;border-radius:7px;border:1.5px solid rgba(0,212,255,.25);background:var(–b3);color:var(–t2);font-size:14px;font-weight:800;cursor:pointer;}
-.sb.on{border-color:var(–c);background:rgba(0,212,255,.18);color:var(–c);}
+.sb{flex:1;height:42px;border-radius:7px;border:1.5px solid rgba(0,212,255,.25);background:var(--b3);color:var(--t2);font-size:14px;font-weight:800;cursor:pointer;}
+.sb.on{border-color:var(--c);background:rgba(0,212,255,.18);color:var(--c);}
 .cg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:10px;}
-.clb{height:46px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15);background:var(–b3);font-size:15px;font-weight:800;cursor:pointer;}
-.sd{padding:10px;border-radius:8px;background:var(–b3);border:1px solid var(–bd);text-align:center;font-size:12px;color:var(–t2);margin-bottom:10px;min-height:44px;display:flex;align-items:center;justify-content:center;}
+.clb{height:46px;border-radius:8px;border:1.5px solid rgba(255,255,255,.15);background:var(--b3);font-size:15px;font-weight:800;cursor:pointer;}
+.sd{padding:10px;border-radius:8px;background:var(--b3);border:1px solid var(--bd);text-align:center;font-size:12px;color:var(--t2);margin-bottom:10px;min-height:44px;display:flex;align-items:center;justify-content:center;}
 .rbs{display:flex;gap:8px;}
 .rok{flex:1;padding:14px;border-radius:9px;font-size:16px;font-weight:800;cursor:pointer;border:1.5px solid;background:rgba(0,255,157,.1);border-color:rgba(0,255,157,.5);color:#00ff9d;}
 .rng{flex:1;padding:14px;border-radius:9px;font-size:16px;font-weight:800;cursor:pointer;border:1.5px solid;background:rgba(255,59,92,.1);border-color:rgba(255,59,92,.5);color:#ff3b5c;}
-.iz{position:relative;background:var(–b3);border:2px dashed rgba(0,212,255,.25);border-radius:8px;min-height:100px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;}
+.iz{position:relative;background:var(--b3);border:2px dashed rgba(0,212,255,.25);border-radius:8px;min-height:100px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;}
 .iz.hi{min-height:0;border-style:solid;}
 .iz img{width:100%;height:auto;display:block;}
 .iz input{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2;}
 .iph{display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;}
 .icl{position:absolute;top:5px;right:5px;z-index:3;background:rgba(255,59,92,.8);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:12px;cursor:pointer;display:none;align-items:center;justify-content:center;font-weight:700;}
-.icl.sh{display:flex;}.sm{font-size:9px;color:var(–t2);font-weight:400;}
+.icl.sh{display:flex;}
+.sm{font-size:9px;color:var(--t2);font-weight:400;}
 </style>
-
 </head>
 <body>
-<div class="hd"><div class="ht">⚙ 攻殻機動隊 SAC</div><div class="hs">SMART PACHISLOT</div></div>
+<div class="hd" style="display:flex;align-items:center;justify-content:space-between;"><div><div class="ht">⚙ 攻殻機動隊 SAC</div><div class="hs">SMART SLOT</div></div><button onclick="rstAll()" style="padding:5px 9px;background:rgba(255,59,92,.1);border:1px solid var(--r);border-radius:6px;color:var(--r);font-size:10px;font-weight:700;cursor:pointer;">RESET</button></div>
 <div class="tabs">
 <button class="tab on" onclick="sw(0)">🔵 S.A.M./ステージ</button>
 <button class="tab" onclick="sw(1)">🔴 AT/PUSH</button>
@@ -72,7 +71,7 @@ body{background:var(--bg);color:var(--t);font-family:'Hiragino Kaku Gothic ProN'
 <div class="pane on" id="p0">
 <div class="cd"><div class="ct">📸 画面メモ</div><div class="cb" style="padding:6px;"><div class="iz" id="iz0"><div class="iph"><div style="font-size:22px;opacity:.35;">📷</div><div style="font-size:10px;color:var(--t2);">タップして貼り込む</div></div><input type="file" accept="image/*" onchange="ldI(this,'iz0')"><button class="icl" id="iz0c" onclick="clI('iz0')">×</button></div></div></div>
 <div class="cd"><div class="ct">S.A.M.終了画面 <span class="sm">タップ+1/長押し−1</span></div><div class="cb"><div class="gr" id="g0"></div></div></div>
-<div class="cd"><div class="ct">AT後 開始ステージ <span class="sm">タップ+1/長押し−1</span></div><div class="cb"><div class="gr" id="g1"></div><div class="nt" style="margin-top:6px;font-size:9px;">超高確が多いほど高設定 設定5=4.2%/6=4.6%<br>「バー」=高確示唆 「夜」=超高確示唆</div></div></div>
+<div class="cd"><div class="ct">AT後 開始ステージ <span class="sm">タップ+1/長押し−1</span></div><div class="cb"><div class="gr" id="g1"></div><div class="nt" style="margin-top:6px;font-size:9px;">超高確が多いほど高設定　設定5=4.2%/6=4.6%<br>「バー」=高確示唆　「夜」=超高確示唆</div></div></div>
 </div>
 <div class="pane" id="p1">
 <div class="cd"><div class="ct">📸 画面メモ</div><div class="cb" style="padding:6px;"><div class="iz" id="iz1"><div class="iph"><div style="font-size:22px;opacity:.35;">📷</div><div style="font-size:10px;color:var(--t2);">タップして貼り込む</div></div><input type="file" accept="image/*" onchange="ldI(this,'iz1')"><button class="icl" id="iz1c" onclick="clI('iz1')">×</button></div></div></div>
@@ -91,15 +90,12 @@ body{background:var(--bg);color:var(--t);font-family:'Hiragino Kaku Gothic ProN'
 <div class="cd"><div class="ct">📊 テーブル×色 成否集計</div><div class="cb" style="padding:4px;overflow-x:auto;"><div id="g8"></div><div style="font-size:9px;color:var(--t2);margin-top:4px;">各セル：成功/合計（成功率%）</div><button class="ra" onclick="rstSen()">⚠ 殲滅データリセット</button></div></div>
 </div>
 <div class="pane" id="p3">
-<div class="cd"><div class="ct">📸 示唆画面メモ</div><div class="cb" style="padding:6px;"><div class="iz" id="iz2"><div class="iph"><div style="font-size:22px;opacity:.35;">📷</div><div style="font-size:10px;color:var(--t2);">タップして貼り込む</div></div><input type="file" accept="image/*" onchange="ldI(this,'iz2')"><button class="icl" id="iz2c" onclick="clI('iz2')">×</button></div></div></div>
-<div class="cd"><div class="cb"><div class="nt bl" style="margin-top:0;">「暴走の証明」↔「恵まれし者たち」が交互が基本<br><b>同じエピソード2連続→設定2以上濃厚！</b></div></div></div>
-<div class="cd"><div class="ct">💡 リプレイフラッシュ（終了後50G以内）</div><div class="cb"><table class="tbl"><tr><th>方向</th><th>示唆</th></tr><tr><td>左→右</td><td style="color:var(--c);font-weight:700;">モードB以上示唆</td></tr><tr><td>右←左(戻る)</td><td style="color:var(--p);font-weight:700;">モードC以上確定!</td></tr></table></div></div>
+<div class="cd"><div class="ct">💡 リプレイフラッシュ（終了後50G以内）</div><div class="cb"><table class="tbl"><tr><th>フラッシュ</th><th>示唆</th></tr><tr><td>左→右</td><td style="color:var(--c);font-weight:700;">モードB以上示唆</td></tr><tr><td>左→右→左</td><td style="color:var(--g);font-weight:700;">モードC以上</td></tr><tr><td style="font-size:9px;">左→右→左→全体明滅</td><td style="color:var(--y);font-size:9px;font-weight:700;">C以上+D期待<br>S.A.M.視覚フラグ保有濃厚</td></tr></table></div></div>
 <div class="cd"><div class="ct">📊 モード別CZ早見表</div><div class="cb" style="padding:4px;overflow-x:auto;"><div id="g9"></div><div style="font-size:9px;color:var(--t2);margin-top:5px;line-height:1.6;">50G・250G・350G・450Gは最低25%で殲滅突入<br>200G・400GはタチコマCZに期待</div></div></div>
 </div>
 <div class="pane" id="p4">
 <div class="cd"><div class="ct">📋 基本スペック</div><div class="cb"><table class="tbl"><tr><th>設定</th><th>出玉率</th><th>CZ確率</th><th>AT確率</th></tr><tr><td>1</td><td>97.9%</td><td>1/238.0</td><td>1/336.3</td></tr><tr><td>2</td><td>98.7%</td><td>1/236.3</td><td>1/332.0</td></tr><tr><td>3</td><td>100.8%</td><td>1/231.7</td><td>1/319.6</td></tr><tr><td>4</td><td>104.9%</td><td>1/220.9</td><td>1/298.7</td></tr><tr><td style="color:var(--g);font-weight:700;">5</td><td style="color:var(--g);">109.3%</td><td style="color:var(--g);">1/214.0</td><td style="color:var(--g);">1/285.8</td></tr><tr><td style="color:var(--r);font-weight:700;">6</td><td style="color:var(--r);">112.2%</td><td style="color:var(--r);">1/210.1</td><td style="color:var(--r);">1/278.0</td></tr></table><div style="font-size:9px;color:var(--t2);margin-top:4px;">純増4.0枚/G（上位AT:8.5枚/G）コイン単価3.3円</div></div></div>
-<div class="cd"><div class="ct">📋 天井・狙い目</div><div class="cb"><table class="tbl"><tr><th>天井</th><th>通常</th><th>リセット後</th></tr><tr><td>CZ間</td><td>550G+α</td><td style="color:var(--y);font-weight:700;">350G+α</td></tr><tr><td>AT間</td><td>999G</td><td style="color:var(--y);font-weight:700;">699G</td></tr></table><div class="nt" style="font-size:9px;">狙い目：リセット後AT間100G〜/AT後CZ間290G〜<br>ヤメ：CZ終了後orAT終了後<br>白境界失敗後：200G or 400GでタチコマCZ確定</div></div></div>
-<div class="cd"><div class="ct">📋 殲滅モード</div><div class="cb"><table class="tbl"><tr><th>モード</th><th>CZ天井</th><th></th></tr><tr><td style="color:var(--r);">A</td><td style="color:var(--r);">550G</td><td style="font-size:9px;">最長</td></tr><tr><td style="color:var(--c);">B</td><td style="color:var(--c);">450G</td><td style="font-size:9px;">ロング前兆あり</td></tr><tr><td style="color:var(--g);">C</td><td style="color:var(--g);">250G</td><td></td></tr><tr><td style="color:var(--y);font-weight:700;">D</td><td style="color:var(--y);font-weight:700;">150G</td><td style="font-size:9px;color:var(--y);">最短！深追い推奨</td></tr></table></div></div>
+<div class="cd"><div class="ct">📋 天井・狙い目</div><div class="cb"><table class="tbl"><tr><th>天井</th><th>通常</th><th>リセット後</th></tr><tr><td>CZ間</td><td>550G+α</td><td style="color:var(--y);font-weight:700;">350G+α</td></tr><tr><td>AT間</td><td>999G</td><td style="color:var(--y);font-weight:700;">699G</td></tr></table></div></div>
 </div>
 <script>
 function ls(k,v){try{if(v===void 0)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v));}catch(e){return null;}}
@@ -130,12 +126,12 @@ var GM={};
 BD.forEach(function(g){var el=document.getElementById(g[0]);g[1].forEach(function(d){el.appendChild(mkB(d[0],d[1],d[2],d[3],d[4],g[2]));GM[d[0]]=g[0];});});
 function setup(){
  document.querySelectorAll('.btn[data-id]').forEach(function(btn){
-  var id=btn.dataset.id,isS=btn.classList.contains('stg'),touched=false;
-  btn.addEventListener('touchstart',function(e){touched=true;HT[id]=setTimeout(function(){HT[id]='f';dec(id,btn,isS);},400);},{passive:true});
-  btn.addEventListener('touchend',function(e){if(HT[id]==='f'){HT[id]=null;return;}clearTimeout(HT[id]);HT[id]=null;inc(id,btn,isS);});
+  var id=btn.dataset.id;
+  btn.addEventListener('touchstart',function(e){e.preventDefault();HT[id]=setTimeout(function(){HT[id]='f';dec(id,btn);},400);},{passive:false});
+  btn.addEventListener('touchend',function(){if(HT[id]==='f'){HT[id]=null;return;}clearTimeout(HT[id]);HT[id]=null;inc(id,btn);});
   btn.addEventListener('touchcancel',function(){clearTimeout(HT[id]);HT[id]=null;});
-  btn.addEventListener('mousedown',function(e){if(touched){touched=false;return;}HT[id]=setTimeout(function(){HT[id]='f';dec(id,btn,isS);},400);});
-  btn.addEventListener('mouseup',function(e){if(HT[id]==='f'){HT[id]=null;return;}if(!HT[id])return;clearTimeout(HT[id]);HT[id]=null;inc(id,btn,isS);});
+  btn.addEventListener('mousedown',function(){HT[id]=setTimeout(function(){HT[id]='f';dec(id,btn);},400);});
+  btn.addEventListener('mouseup',function(){if(HT[id]==='f'){HT[id]=null;return;}if(!HT[id])return;clearTimeout(HT[id]);HT[id]=null;inc(id,btn);});
   btn.addEventListener('mouseleave',function(){clearTimeout(HT[id]);HT[id]=null;});
  });
 }
@@ -149,9 +145,8 @@ function updGrp(gid){
   if(id==='ssr'){var sp=tot?Math.round(v/tot*100):0;el.style.color=sp>=4?'var(--y)':sp>=3?'var(--g)':'';}
  });
 }
-function inc(id,b,isS){CV[id]=(CV[id]||0)+1;document.getElementById(id).textContent=CV[id];b.classList.add('ok');updGrp(GM[id]);ls('gc',CV);}
-function dec(id,b,isS){if(!(CV[id]||0))return;CV[id]--;document.getElementById(id).textContent=CV[id];if(!CV[id])b.classList.remove('ok');b.classList.add('mf');setTimeout(function(){b.classList.remove('mf');},300);updGrp(GM[id]);ls('gc',CV);}
-function updS(){['g0','g1','g2','g3','g4'].forEach(function(g){updGrp(g);});}
+function inc(id,b){CV[id]=(CV[id]||0)+1;document.getElementById(id).textContent=CV[id];b.classList.add('ok');updGrp(GM[id]);ls('gc',CV);}
+function dec(id,b){if(!(CV[id]||0))return;CV[id]--;document.getElementById(id).textContent=CV[id];if(!CV[id])b.classList.remove('ok');b.classList.add('mf');setTimeout(function(){b.classList.remove('mf');},300);updGrp(GM[id]);ls('gc',CV);}
 function sw(i){document.querySelectorAll('.pane').forEach(function(p,j){p.classList.toggle('on',i===j);});document.querySelectorAll('.tab').forEach(function(b,j){b.classList.toggle('on',i===j);});}
 var CLS=['白','青','緑','赤','紫','金','虹'];
 var _cb=ls('gcb');
@@ -268,7 +263,10 @@ function clI(zid){
  document.getElementById(zid+'c').classList.remove('sh');
  z.classList.remove('hi');z.querySelector('input').value='';
 }
-setup();updS();updStat();
+function rstAll(){if(!confirm('全データをリセットしますか？'))return;document.querySelectorAll('.btn[data-id]').forEach(function(b){var id=b.dataset.id;CV[id]=0;document.getElementById(id).textContent=0;b.classList.remove('ok');});'g0g1g2g3g4'.match(/g\d/g).forEach(updGrp);ls('gc',CV);}
+setup();
+document.querySelectorAll('.btn[data-id]').forEach(function(b){updGrp(GM[b.dataset.id]);});
+updStat();
 </script>
 </body>
 </html>
